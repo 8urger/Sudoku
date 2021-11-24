@@ -23,6 +23,7 @@ def menu(answer, yourBoard):
 		rowNaughts = [[1, 2, 3, 4, 5, 6, 7, 8, 9] for l in range(9)]
 		columnNaughts = [[1, 2, 3, 4, 5, 6, 7, 8, 9] for m in range(9)]
 		sectorNaughts = [[1, 2, 3, 4, 5, 6, 7, 8, 9] for n in range(9)]
+		
 		for i in range(9):
 			for j in range(9):
 				rows[i][j] = yourBoard[i][j]
@@ -55,9 +56,6 @@ def menu(answer, yourBoard):
 					x = columns[i][j]
 					columnNaughts[i][(x-1)] = 0
 
-
-
-
 		for i in range(9):
 			print(rows[i])
 			print(columns[i])
@@ -66,7 +64,6 @@ def menu(answer, yourBoard):
 			print(columnNaughts[i])
 			print(sectorNaughts[i])
 			print("")
-
 
 #receivers a row(int), column(char), value(int), board([[]])
 def setCell(row, column, value, yourBoard):
@@ -97,10 +94,6 @@ def setCell(row, column, value, yourBoard):
 	if (row == 9):
 		setColumn(8, column, value, yourBoard)
 		return yourBoard
-
-
-
-
 
 def setColumn(row, column, value, yourBoard):
 	if (column == 'a'):
