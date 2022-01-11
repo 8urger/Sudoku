@@ -1,5 +1,5 @@
 import boardBuilder
-import soduku_populate
+import sudoku_populate
 
 def main():
 	answer = 'z'
