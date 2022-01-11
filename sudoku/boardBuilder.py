@@ -1,4 +1,4 @@
-import soduku_populate
+import sudoku_populate
 import linked_list
 import math
 
