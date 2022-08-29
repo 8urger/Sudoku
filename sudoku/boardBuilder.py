@@ -1,212 +1,108 @@
 import sudoku_populate
 import linked_list
 import math
+from os import system, name
+from time import sleep
+import sys
 
 def menu(answer, yourBoard):
-#Mostly for debugging. This creates arrays for all columns, rows, and sectors to include 
-#arrays for the naught(values not present in the column, row, or sector) as well
-	if (answer == 'r'):
 
-		rows = [[0, 0, 0, 0, 0, 0, 0, 0, 0] for i in range(9)]
-		columns = [[0, 0, 0, 0, 0, 0, 0, 0, 0] for j in range(9)]
-		sector = [[0, 0, 0, 0, 0, 0, 0, 0, 0] for k in range(9)]
-		rowNaughts = [[1, 2, 3, 4, 5, 6, 7, 8, 9] for l in range(9)]
-		columnNaughts = [[1, 2, 3, 4, 5, 6, 7, 8, 9] for m in range(9)]
-		sectorNaughts = [[1, 2, 3, 4, 5, 6, 7, 8, 9] for n in range(9)]
-
-		for i in range(9):
-			for j in range(9):
-				rows[i][j] = yourBoard[i][j]
-		for i in range(9):
-			for j in range(9):
-				columns[i][j] = yourBoard[j][i]
-		a = 0
-		for p in range(0, 9, 3):
-			for n in range(0, 9, 3):
-				b=-1
-				for i in range(3):
-					for j in range(3):
-						b+=1
-						sector[a][b] = yourBoard[(i+p)][(j+n)]
-				a+=1
-
-		for i in range(9):
-			for j in range(9):
-				if (sector[i][j] != 0):
-					x = sector[i][j]
-					sectorNaughts[i][(x-1)] = 0
-		for i in range(9):
-			for j in range(9):
-				if (rows[i][j] != 0):
-					x = rows[i][j]
-					rowNaughts[i][(x-1)] = 0
-		for i in range(9):
-			for j in range(9):
-				if (columns[i][j] != 0):
-					x = columns[i][j]
-					columnNaughts[i][(x-1)] = 0
-
-		for i in range(9):
-			print(rows[i])
-			print(columns[i])
-			print(sector[i])
-			print(rowNaughts[i])
-			print(columnNaughts[i])
-			print(sectorNaughts[i])
-			print("")
-
-
-#This allows manual population of a board by calling setCell		
+#Manual population of a board		
 	if (answer == 'i'):
 		print(answer)
-		nextRow = input("What row is your cell in?(1-9)")
+		nextRow = input("What row is numberToCheckour cell in?(1-9)")
 		nextRow = int(nextRow)
-		nextColumn = input("What column is your cell in?(a-i)")
-		nextValue = input("What is your next value to populate?")
+		nextColumn = input("What column is numberToCheckour cell in?(a-i)")
+		nextValue = input("What is numberToCheckour next value to populate?")
 		nextValue = int(nextValue)
 		setCell(nextRow, nextColumn, nextValue, yourBoard)
 
-#This prints the board		
+#Print board		
 	if (answer == 'p'):
 		for i in range(9):
 			print(yourBoard[i])
 		print()
-		
-#This is to create a linked list for all unsolved cells
-#Not currently working, the idea was to store all linked lists in a dictionary
-	#if (answer == 's'):
-	#	linked_list.create(yourBoard)
+		sleep(5)
+		system("clear")
 
-#This finds all empty cells in yourBoard and creates, one at a time, an array(1-9) and then eliminates possibilites
-#If the array length is 1, then the cell is solved
+#This finds all emptnumberToCheck cells in yourBoard and creates, one at a time, an arranumberToCheck(1-9) and then eliminates possibilites
+#If the arranumberToCheck length is 1, then the cell is solved
 	if (answer == 's'):
 		sector = [[0, 0, 0, 0, 0, 0, 0, 0, 0] for k in range(9)]
-		o4 = 0
-		for o1 in range(0, 9, 3):
-			for o2 in range(0, 9, 3):
-				o3=-1
-				for o5 in range(3):
-					for o6 in range(3):
-						o3+=1
-						sector[o4][o3] = yourBoard[(o5+o1)][(o6+o2)]
-				o4+=1
+		sectorRowNum = 0
+		for boardRowOne in range(0, 9, 3):
+			for boardColumnOne in range(0, 9, 3):
+				sectorColumnNum=-1
+				for boardRowTwo in range(3):
+					for boardColumnTwo in range(3):
+						sectorColumnNum+=1
+						sector[sectorRowNum][sectorColumnNum] = yourBoard[(boardRowTwo+boardRowOne)][(boardColumnTwo+boardColumnOne)]
+				sectorRowNum+=1
 	
 		
 		for p in range(0, 9, 3):
 			for n in range(0, 9, 3):
 				for i in range(3):
 					for j in range(3):
-
-#i+p is the row, j+n the column allowing itteration through the entire 9x9 board
 						rowNum = i+p
 						columnNum = j+n
-						if (yourBoard[(i+p)][(j+n)]==0):
-							other = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-							#This traverses the row the cell is in. If it finds any values in that row, it removes them from other[]
-							for ii in range(9):
-								x = yourBoard[i+p][ii]
-								if ((x != 0) and (x in other)):# and (x not in array)):
-									other.remove(x)
-#This traverses the column the cell is in. If it finds any values in that row, it removes them from other[]			
-							for pp in range(9):
-								y = yourBoard[pp][j+n]
-								if ((y!=0) and (y in other)):
-									other.remove(y)
-			
-							if ((rowNum<3 and columnNum<3)):
-								for q in range(9):
-									y = sector[0][q]
-									if ((y!=0) and (y in other)):
-										other.remove(y)
-	
-							if ((rowNum<3 and 2<columnNum<6)):
-								for q in range(9):
-									y = sector[1][q]
-									if ((y!=0) and (y in other)):
-										other.remove(y)
-			
-							if ((rowNum<3 and 5<columnNum<9)):
-								for q in range(9):
-									y = sector[2][q]
-									if ((y!=0) and (y in other)):
-										other.remove(y)					
-					
-							if ((2<rowNum<6 and columnNum<3)):
-								for q in range(9):
-									y = sector[3][q]
-									if ((y!=0) and (y in other)):
-										other.remove(y)
+
+						#Creates an array holding all possible solutions
+						if (yourBoard[(rowNum)][(columnNum)]==0):
+							possibleSolutionArrayNumToCheck = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
+							#Removes values found in row
+							for tempColumnNum in range(9):
+								numberToCheck = yourBoard[rowNum][tempColumnNum]
+								checkForRemoval(numberToCheck, possibleSolutionArrayNumToCheck)
 							
+							#Removes values found in column			
+							for tempRowNum in range(9):
+								numberToCheck = yourBoard[tempRowNum][columnNum]
+								checkForRemoval(numberToCheck, possibleSolutionArrayNumToCheck)
+
+							#Removes values found in sector
+							if ((rowNum<3 and columnNum<3)):
+								sectorRemover(sector, 0, possibleSolutionArrayNumToCheck)
+							if ((rowNum<3 and 2<columnNum<6)):
+								sectorRemover(sector, 1, possibleSolutionArrayNumToCheck)
+							if ((rowNum<3 and 5<columnNum<9)):
+								sectorRemover(sector, 2, possibleSolutionArrayNumToCheck)			
+							if ((2<rowNum<6 and columnNum<3)):
+								sectorRemover(sector, 3, possibleSolutionArrayNumToCheck)
 							if ((2<rowNum<6 and 2<columnNum<6)):
-								for q in range(9):
-									y = sector[4][q]
-									if ((y!=0) and (y in other)):
-										other.remove(y)			
-				
+								sectorRemover(sector, 4, possibleSolutionArrayNumToCheck)		
 							if ((2<rowNum<6 and 5<columnNum<9)):
-								for q in range(9):
-									y = sector[5][q]
-									if ((y!=0) and (y in other)):
-										other.remove(y)
-				
+								sectorRemover(sector, 5, possibleSolutionArrayNumToCheck)
 							if ((5<rowNum<9 and columnNum<3)):
-								for q in range(9):
-									y = sector[6][q]
-									if ((y!=0) and (y in other)):
-										other.remove(y)
-											
+								sectorRemover(sector, 6, possibleSolutionArrayNumToCheck)		
 							if ((5<rowNum<9 and 2<columnNum<6)):
-								for q in range(9):
-									y = sector[7][q]
-									if ((y!=0) and (y in other)):
-										other.remove(y)
-
+								sectorRemover(sector, 7, possibleSolutionArrayNumToCheck)
 							if ((5<rowNum<9 and 5<columnNum<9)):
-								for q in range(9):
-									y = sector[8][q]
-									if ((y!=0) and (y in other)):
-										other.remove(y)
-#This finds if there is only one value left, then solves the cell
-							if (len(other)==1):
-								yourBoard[i+p][j+n] = other[0]
+								sectorRemover(sector, 8, possibleSolutionArrayNumToCheck)
 
-#This allows a user to load in sudoku puzzles from a book I transcribed
-#Will load more later, for now there is only 1
+							#Checks if solved
+							if (len(possibleSolutionArrayNumToCheck)==1):
+								yourBoard[rowNum][columnNum] = possibleSolutionArrayNumToCheck[0]
+
+#Loads premade puzzle
 	if (answer == '1'):
-		soduku_populate.populator(answer, yourBoard)
+		sudoku_populate.populator(answer, yourBoard)
+	
+	if (answer == '2'):
+		sudoku_populate.populator(answer, yourBoard)
 
+def sectorRemover(sector, sectorRow, possibleSolutionArrayNumToCheck):
+	for sectorColumnSolver in range(9):
+			numberToCheck = sector[sectorRow][sectorColumnSolver]
+			checkForRemoval(numberToCheck, possibleSolutionArrayNumToCheck)
 
+def checkForRemoval(numberToCheck, possibleSolutionArrayNumToCheck):
+	if ((numberToCheck != 0) and (numberToCheck in possibleSolutionArrayNumToCheck)):
+		possibleSolutionArrayNumToCheck.remove(numberToCheck)
 
-
-#receivers a row(int), column(char), value(int), board([[]]) and inserts the value by calling set column
 def setCell(row, column, value, yourBoard):
-	if (row == 1):
-		setColumn(0, column, value, yourBoard)
-		return yourBoard
-	if (row == 2):
-		setColumn(1, column, value, yourBoard)
-		return yourBoard
-	if (row == 3):
-		setColumn(2, column, value, yourBoard)
-		return yourBoard
-	if (row == 4):
-		setColumn(3, column, value, yourBoard)
-		return yourBoard
-	if (row == 5):
-		setColumn(4, column, value, yourBoard)
-		return yourBoard
-	if (row == 6):
-		setColumn(5, column, value, yourBoard)
-		return yourBoard
-	if (row == 7):
-		setColumn(6, column, value, yourBoard)
-		return yourBoard
-	if (row == 8):
-		setColumn(7, column, value, yourBoard)
-		return yourBoard
-	if (row == 9):
-		setColumn(8, column, value, yourBoard)
-		return yourBoard
+	setColumn(row-1, column, value, yourBoard)
 
 def setColumn(row, column, value, yourBoard):
 	if (column == 'a'):
@@ -231,12 +127,6 @@ def setColumn(row, column, value, yourBoard):
 
 
 	
-
-
-
-
-
-
 
 
 
