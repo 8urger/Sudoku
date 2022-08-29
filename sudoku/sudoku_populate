@@ -28,7 +28,6 @@ def populator(number, yourBoard):
 		yourBoard[5][7]=1
 		yourBoard[6][4]=7
 		yourBoard[6][5]=6
-		#yourBoard[6][6]=3 #delete this
 		yourBoard[7][0]=3
 		yourBoard[7][2]=5
 		yourBoard[7][4]=8
